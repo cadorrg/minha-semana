@@ -37,7 +37,7 @@ function tasksDay(date){let out=db.tasks.filter(t=>!t.repeat||t.repeat==='none')
 for(let t of db.tasks.filter(t=>t.repeat&&t.repeat!=='none')){if(recurringOn(t,date)){let x=occurrence(t,date);if(!x.hidden&&x.date===date)out.push(x)}}
 for(let [key,over] of Object.entries(db.taskOccurrences)){if(over.date!==date||over.hidden)continue;let pivot=key.lastIndexOf('|'),seriesId=key.slice(0,pivot),origin=key.slice(pivot+1);if(origin===date)continue;let t=db.tasks.find(t=>t.id===seriesId&&t.repeat&&t.repeat!=='none');if(t&&recurringOn(t,origin))out.push(occurrence(t,origin))}
 return out.sort((a,b)=>(b.priority?1:0)-(a.priority?1:0))}
-function getTask(id){if(id.startsWith('r:')){let p=id.lastIndexOf(':'),seriesId=id.slice(2,p),date=id.slice(p+1),base=db.tasks.find(t=>t.id===seriesId);return base?occurrence(base,date):null}return db.tasks.find(t=>t.id===id)}
+function getTask(id){if(!id)return null;if(id.startsWith('r:')){let p=id.lastIndexOf(':'),seriesId=id.slice(2,p),date=id.slice(p+1),base=db.tasks.find(t=>t.id===seriesId);return base?occurrence(base,date):null}return db.tasks.find(t=>t.id===id)}
 function patchTask(t,changes){if(!t)return;if(t.seriesId){let k=occurrenceKey(t.seriesId,t.occurrenceDate);db.taskOccurrences[k]={...(db.taskOccurrences[k]||{}),...changes}}else Object.assign(t,changes)}
 function checklistOf(t){return Array.isArray(t?.checklist)?t.checklist:[]}
 const notDone=ts=>ts.filter(t=>!t.done);const planned=ts=>ts.reduce((n,t)=>n+(Number(t.minutes)||0),0);const capDay=d=>Number(db.capacities[d]??120);const objective=id=>db.goals.find(g=>g.id===id)?.title||'';
