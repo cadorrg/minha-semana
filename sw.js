@@ -1,5 +1,5 @@
 // Minha Semana 1.1 — rede primeiro e fallback offline.
-const CACHE = 'minha-semana-app-v1.1';
+const CACHE = 'minha-semana-app-v1.3';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil((async () => {
